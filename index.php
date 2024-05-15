@@ -1,19 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+// MySQL 
+echo 'dfadfadfadfadfa';
+$servername = "localhost";  // MySQL 服务器地址
+$username = "root";      // MySQL 用户名
+$password = "liduan1988";      // MySQL 密码
+$database = "frankpage";      // 要连接的数据库名
+try {
+  // 创建连接
+  $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+  
+  // 设置 PDO 错误模式为异常
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  
+  echo "连接成功";
+} catch(PDOException $e) {
+  echo "连接失败: " . $e->getMessage();
+}
 
+
+
+// 创建新表的 SQL 查询语句
+              // $sql = "CREATE TABLE IF NOT EXISTS LayOut (
+              //   Title VARCHAR(255),
+              //   My_Quotes TEXT,
+              //   Home VARCHAR(255),
+              //   About VARCHAR(255),
+              //   Research_Interests VARCHAR(255),
+              //   Experience VARCHAR(255),
+              //   Publications VARCHAR(255),
+              //   Resume VARCHAR(255),
+              //   Contact VARCHAR(255),
+              //   Others VARCHAR(255),
+              //   Path_to_Img_About VARCHAR(255),
+              //   Introduction MEDIUMTEXT,
+              //   Birthday VARCHAR(255),
+              //   Birthday_values VARCHAR(855),
+              //   Phone VARCHAR(255),
+              //   Phone_values VARCHAR(255),
+              //   Address VARCHAR(255),
+              //   Address_values VARCHAR(655),
+              //   Email VARCHAR(255),
+              //   Email_values VARCHAR(555),
+              //   update_time TIMESTAMP
+              // )";
+
+              // // 执行 SQL 查询
+              // if ($conn->query($sql) === TRUE) {
+              //   echo "Table created successfully";
+              // } else {
+              //   echo "Error creating table: " . $conn->error;
+              // }
+      // 这是设置自动更新  修改时间的trigger
+// $sql_trigger = "CREATE TRIGGER update_timestamp
+// BEFORE INSERT ON LayOut
+// FOR EACH ROW
+// BEGIN
+//     SET NEW.update_time = CURRENT_TIMESTAMP;
+// END;
+// ";
+
+// if ($conn->query($sql_trigger) === TRUE) {
+//     echo "Trigger created successfully";
+// } else {
+//     echo "Error creating trigger: " . $conn->error;
+// }
+
+// // 关闭数据库连接
+// $conn->close();
+$stmt = $conn->prepare("SELECT * FROM layout");
+$stmt->execute();
+// 获取查询结果
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if(empty($result)){
+ //如果是空值，就直接赋值为column的name
+  for ($i = 0; $i < $stmt->columnCount(); $i++) {
+      $meta = $stmt->getColumnMeta($i);
+      $name=$meta['name'];
+      $$name=$meta['name'];    
+        
+  }    
+}else{
+  foreach ($result as $column => $value) {
+    // 将每个键值对转换为PHP变量
+    if ($value !== null || $value !== '') {
+      // 如果$value不为空，则赋值为$value
+      $$column = $value;
+    } else {
+      // 如果$value为空，则赋值为当前列名$column
+      $$column = $column;
+      echo $column;
+    }
+  }
+}
+
+// exit;
+?>
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5BB8W2X');</script>
-  <!-- End Google Tag Manager -->
+ 
   <link rel="icon" type="image/png" href="/favicon.png"/>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Personal Portfolio</title>
+  <title>Frank Page</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -27,56 +118,28 @@
   <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
   <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
-
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-169007209-3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-169007209-3');
-  </script>
-
-
-
-  <!-- =======================================================
-  * Template Name: Personal - v2.1.0
-  * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
-  
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BB8W2X"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <!-- ======= Header ======= -->
+    <!-- ======= Header ======= -->
   <header id="header" class="header-tops">
 
     <div class="container">
-
-      <h1><a href="index.html">Prerak Raja</a></h1>
-      <h2 style="color:#fff">I'm <span class="typing" style="color:#12D640"></span></h2>
+      <h1><a href="index.php"><?php echo $Title ?></a></h1>
+      <h2 style="color:#fff"><?php echo $My_Quotes ?></span></h2>
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li class="active"><a href="#header"> <span>Home</span></a></li>
-          <li><a href="#about"><span>About</span></a></li>
-          <li><a href="#education"> <span>Education</span></a></li>
-          <li><a href="#experience"> <span>Experience</span></a></li>
-<!--          <li><a href="#projects"> <span>Projects</span></a></li>-->
-          <li><a href="#portfolio"> <span>Projects</span></a></li>
-          <li><a href="#skills"> <span>Skills</span></a></li>
-          <li><a href="https://drive.google.com/file/d/1pT-Nk6AxY9ZOWBizuDb4htA3IiUF_fSe/view?usp=sharing" target="_blank"> <span>Resume</span></a></li>
+          <li class="active"><a href="#header"> <span><?php echo $Home ?></span></a></li>
+          <li><a href="#about"><span><?php echo $About ?></span></a></li>
+          <li><a href="#education"> <span><?php echo $Research_Interests ?></span></a></li>
+          <li><a href="#experience"> <span><?php echo $Experience ?></span></a></li>
+          <li><a href="#portfolio"> <span><?php echo $Publications ?></span></a></li>          
+          <li><a href="https://drive.google.com/file/d/1pT-Nk6AxY9ZOWBizuDb4htA3IiUF_fSe/view?usp=sharing" target="_blank"> <span><?php echo $Resume ?></span></a></li>
           <!-- <li><a href="#links"> <span>Resume & Links</span></a></li> -->
-          <li><a href="#contacts"> <span>Contact</span></a></li>
+          <li><a href="#contacts"> <span><?php echo $Contact ?></span></a></li>
+          <li><a href="#skills"> <span><?php echo $Others ?></span></a></li>
 
         </ul>
       </nav><!-- .nav-menu -->
@@ -98,7 +161,7 @@
     <div class="about-me container">
 
       <div class="section-title">
-        <h2>About</h2>
+        <h2><?php echo $About ?></h2>
       </div>
 
       <div class="row">
@@ -106,9 +169,7 @@
           <img src="assets/img/profile.jpeg" class="img-fluid" alt="">
         </div>
         <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
-          <p>Focused and enthusiastic developer with a keen interest in software development and artificial intelligence. By comprehensive exposure
-            to the underlying concepts and applying them vividly to various projects, my love for these domains came into being.
-            I am a passionate individual who thrives to build and apply algorithms to solve real-world industry problems.
+          <p><?php echo $Introduction ?>
           </p>
           <div class="row">
             <div class="col-lg-6">
@@ -119,7 +180,7 @@
             </div>
             <div class="col-lg-6">
               <ul>
-                <li><i class="icofont-rounded-right"></i> <strong>City:</strong> Tempe, AZ</li>
+                <li><i class="icofont-rounded-right"></i> <strong>Address:</strong> Tempe, AZ</li>
                 <li><i class="icofont-rounded-right"></i> <strong>Email:</strong> rajaprerak@gmail.com</li>
               </ul>
             </div>
@@ -130,7 +191,7 @@
     </div><!-- End About Me -->
 
     <!-- ======= Interests ======= -->
-    <div class="interests container">
+    <!-- <div class="interests container">
 
       <div class="section-title">
         <h2>Interests</h2>
@@ -187,135 +248,70 @@
         </div>
       </div>
 
-    </div><!-- End Interests -->
+    </div>End Interests -->
   </section><!-- End About Section -->
 
-
-
-  <!-- ======= Education Section ======= -->
+  <!-- ======= Research Interests ======= -->
   <section id="education" class="services">
     <div class="container">
       <div class="section-title">
-        <h2>Education</h2>
+        <h2>Research Interests</h2>
       </div>
+      <!-- ======= Interests ======= -->
+     <div class="interests container">
+
+
       <div class="row">
-        <div class="col-lg-12" data-aos="fade-up" style="display: inline-block;">
-
-
-            <div class="col-md-4 mt-4 mt-md-0 icon-box" data-aos="fade-up" data-aos-delay="100" style="padding:0px 0px;padding-bottom: 5px;display: inline-block;">
-              <img src="assets/img/education/ASU.jpg" class="img-fluid" alt="">
-              <!-- <h4 style="text-align:left;"><a href="https://www.asu.edu/" target="_blank" style="color:#12d640">Arizona State University</a><br> </h4> -->
-              <p style="text-align:left;color:#fff;padding: 5px 10px;"><em>MS in Computer Science</em></p>
-              <h5 style="text-align:left;padding: 0px 10px;">Janurary 2021 - Present</h5>
-              <h6 style="text-align:left;color:#fff;padding: 0px 10px;">Relevant Coursework</h6>
-              <ul style="text-align:left;color:#fff;">
-                <li>Distributed Database Systems</li>
-                <li>Cloud Computing</li>
-                <li>Foundation Of Algorithms</li>
-              </ul>
-            </div>
-            <div class="col-md-4 mt-4 mt-md-0 icon-box" data-aos="fade-up" data-aos-delay="100" style="padding:0px 0px;padding-bottom: 5px;display: inline-block;">
-              <img src="assets/img/education/au.png" class="img-fluid" alt="">
-              <!-- <h4 style="text-align:left;"><a href="https://ahduni.edu.in/" target="_blank" style="color:#12d640">Ahmedabad University</a><br> </h4> -->
-              <p style="text-align:left;color:#fff;padding: 5px 10px;"><em>B.Tech. in Information and Communication Technology</em></p>
-              <h5 style="text-align:left;padding: 0px 10px;">July 2014 - May 2018</h5>
-              <h6 style="text-align:left;color:#fff;padding: 0px 10px;">Relevant Coursework</h6>
-              <ul style="text-align:left;color:#fff;">
-                <!-- <li>Data Structures &amp; Algorithms</li> -->
-                <li>Database Management Systems</li>
-                <!-- <li>Operating Systems</li> -->
-                <li>Algorithms &amp; Optimization for Big Data</li>
-                <li>Machine Learning</li>
-                <!-- <li>Computer Vision</li> -->
-              </ul>
-            </div>
+        <div class="col-lg-3 col-md-4">
+          <div class="icon-box">
+            <i class="ri-global-line" style="color: #ffbb2c;"></i>
+            <h3>Software Development</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
+          <div class="icon-box">
+            <i class="ri-database-2-line" style="color: #5578ff;"></i>
+            <h3>Machine Learning</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
+          <div class="icon-box">
+            <i class="ri-camera-3-line" style="color: #e80368;"></i>
+            <h3>Computer Vision</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4 mt-lg-0">
+          <div class="icon-box">
+            <i class="ri-english-input" style="color: #1c7d32;"></i>
+            <h3>Natural Language Processing</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4">
+          <div class="icon-box">
+            <i class="ri-code-s-slash-fill" style="color: #28a745;"></i>
+            <h3>Software Engineering</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4">
+          <div class="icon-box">
+            <i class="ri-bar-chart-box-line" style="color: #f1081f;"></i>
+            <h3>Visualization</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4">
+          <div class="icon-box">
+            <i class="ri-file-list-3-line" style="color: #47aeff;"></i>
+            <h3>Algorithms</h3>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mt-4">
+          <div class="icon-box">
+            <i class="ri-image-line" style="color: #ffc107;"></i>
+            <h3>Image Processing</h3>
           </div>
         </div>
       </div>
-
-
-    <div class="portfolio">
-    <div class="container">
-      <div class="section-title">
-        <h2>Online Certification</h2>
-      </div>
-
-      <div class="row portfolio-container" style="position: relative; height: 437.75px;">
-
-         <div class="col-lg-4 col-md-6 portfolio-item filter-app" style="position: absolute; left: 0px; top: 0px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/stanford.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Machine Learning</h4>
-              <div class="portfolio-links">
-                <a href="https://www.coursera.org/account/accomplishments/certificate/2BTJ636Q2E93?utm_medium=certificate&amp;utm_source=link&amp;utm_campaign=copybutton_certificate/" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-           </div>
-          </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app" style="position: absolute; left: 370px; top: 0px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/stanford.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Algorithms-Design and Analysis</h4>
-              <div class="portfolio-links">
-                <a href="https://www.coursera.org/account/accomplishments/certificate/6THRQXYE9EHZ?utm_medium=certificate&amp;utm_source=link&amp;utm_campaign=copybutton_certificate" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app" style="position: absolute; left: 740px; top: 0px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/ucsd.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Algorithmic Toolbox</h4>
-              <div class="portfolio-links">
-                <a href="https://coursera.org/share/98bbfb990484fac370d5e5ed14334ea4" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-project" style="position: absolute; left: 0px; top: 218.875px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/ibm.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Deep Learning with Tensorflow</h4>
-              <div class="portfolio-links">
-                <a href="https://drive.google.com/file/d/1FSwPt19EzY_tpvqkE6igtLf3gccKcssC/view?usp=sharing" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-project" style="position: absolute; left: 370px; top: 218.875px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/ibm.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Machine Learning with Python</h4>
-              <div class="portfolio-links">
-                <a href="https://drive.google.com/file/d/1gimySw_NPzCJ54dqZ2j2wYyz-JDOg-S0/view?usp=sharing" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-project" style="position: absolute; left: 740px; top: 218.875px;">
-          <div class="portfolio-wrap">
-            <img src="assets/img/certification/dai.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Neural Networks and Deep Learning</h4>
-              <div class="portfolio-links">
-                <a href="https://www.coursera.org/account/accomplishments/certificate/ELXZ6FE2BU7X?utm_medium=certificate&amp;utm_source=link&amp;utm_campaign=copybutton_certificate/" target="_blank" title="Certificate"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+<!-- ======= end Interests ======= -->
     </div>
     </div>
 
@@ -394,7 +390,7 @@
     <div class="container">
 
       <div class="section-title">
-        <h2>Projects</h2>
+        <h2>Publications</h2>
       </div>
 
       <div class="row">
@@ -487,18 +483,7 @@
           </div>
         </div>
 
-        <!-- <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-          <br>
-          <center><h4>Tech Blog</h4></center>
-          <div class="portfolio-wrap">
-            <img src="assets/img/project/blog.jpg" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <div class="portfolio-links">
-                <a href="projects/blog.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Project Details"><i class="bx bx-info-circle"></i></a>
-              </div>
-            </div>
-          </div>
-        </div> -->
+     
 
         <div class="col-lg-4 col-md-6 portfolio-item filter-project">
           <center><h4>Video Description Generator</h4></center>
@@ -552,7 +537,7 @@
   <section id="skills" class="services">
     <div class="container">
       <div class="section-title">
-        <h2>Skills</h2>
+        <h2>Others</h2>
       </div>
       <div class="row">
         <div class="col-lg-12" data-aos="fade-up">

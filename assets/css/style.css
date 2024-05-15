@@ -15,6 +15,14 @@ body {
   background: transparent;
 }
 
+.input {
+  background: transparent; 
+  width: auto !important;
+  /* width: 20px;  */
+  height: auto !important;
+  border: none;
+  color: white;
+}
 body::before {
   content: "";
   position: fixed;
