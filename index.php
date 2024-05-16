@@ -71,7 +71,7 @@ try {
 // $conn->close();
 $stmt = $conn->prepare("SELECT * FROM layout");
 $stmt->execute();
-// 获取查询结果
+// 获取查询结果,bing
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if(empty($result)){
