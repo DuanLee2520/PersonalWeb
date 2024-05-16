@@ -2,18 +2,12 @@
 <html lang="en">
 
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-5BB8W2X');</script>
-  <!-- End Google Tag Manager -->
+  
   <link rel="icon" type="image/png" href="/favicon.png"/>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Personal Portfolio</title>
+  <title>Frank Page</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -30,40 +24,56 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
-
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-169007209-3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-169007209-3');
-  </script>
-
-
-
-  <!-- =======================================================
-  * Template Name: Personal - v2.1.0
-  * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
   
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5BB8W2X"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <!-- ======= Header ======= -->
   <?php
   // identification here
-  
+  $servername = "localhost";  // MySQL 服务器地址
+  $username = "root";      // MySQL 用户名
+  $password = "liduan1988";      // MySQL 密码
+  $database = "frankpage";      // 要连接的数据库名
+  try {
+    // 创建连接
+    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    
+    // 设置 PDO 错误模式为异常
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    echo "连接成功";
+  } catch(PDOException $e) {
+    echo "连接失败: " . $e->getMessage();
+    }
+  // 获取数据
+  $stmt = $conn->prepare("SELECT * FROM layout");
+  $stmt->execute();
+  // 获取查询结果,bing
+  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if(empty($result)){
+  //如果是空值，就直接赋值为column的name
+    for ($i = 0; $i < $stmt->columnCount(); $i++) {
+        $meta = $stmt->getColumnMeta($i);
+        $name=$meta['name'];
+        $$name=$meta['name'];    
+          
+    }    
+  }else{
+    foreach ($result as $column => $value) {
+      // 将每个键值对转换为PHP变量
+      if ($value !== null || $value !== '') {
+        // 如果$value不为空，则赋值为$value
+        $$column = $value;
+      } else {
+        // 如果$value为空，则赋值为当前列名$column
+        $$column = $column;
+        echo $column;
+      }
+    }
+  }
   ?>
-  <form action="#" method="post">
+  <form action="UpdateData.php" method="post">
     <header id="header" class="header-tops">
 
       <div class="container">
